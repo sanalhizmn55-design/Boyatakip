@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salon Hidayet | Dijital Boya Arşivi</title>
+    <title>Salon Hidayet | Online Boya Arşivi</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -11,17 +11,19 @@
     <div class="container">
         <header>
             <h1>Salon Hidayet</h1>
-            <button id="ayarlarBtn" class="settings-icon">
+            <button id="ayarlarBtn" class="settings-icon" title="Kayıt Paneli">
                 <i class="fas fa-cog"></i>
             </button>
         </header>
 
         <section id="kayitPaneli" class="card hidden">
             <div class="panel-header">
-                <h2>Yeni Kayıt Ekle</h2>
+                <h2 id="panelBaslik">Yeni Kayıt Ekle</h2>
                 <button type="button" onclick="paneliKapat()" class="close-btn">&times;</button>
             </div>
             <form id="boyaForm">
+                <input type="hidden" id="duzenlenenId">
+                
                 <input type="text" id="adSoyad" placeholder="Müşteri Ad Soyad" required>
                 <input type="text" id="boyaMarka" placeholder="Boya Markası" required>
                 
@@ -39,8 +41,8 @@
                         <option value="40">40 Volüm</option>
                     </select>
                 </div>
-                <textarea id="notlar" placeholder="Uygulama notları veya özel formüller..."></textarea>
-                <button type="submit" class="btn-save">Buluta Kaydet</button>
+                <textarea id="notlar" placeholder="Uygulama notları..."></textarea>
+                <button type="submit" class="btn-save" id="kaydetBtn">Buluta Kaydet</button>
             </form>
         </section>
 
