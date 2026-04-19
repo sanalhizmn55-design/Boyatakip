@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, doc, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyByNIGTjC3_AKzn_0hfD_btA13Pg4378A8",
@@ -13,36 +13,40 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Panel Açma/Kapama İşlemi
 const ayarlarBtn = document.getElementById('ayarlarBtn');
 const kayitPaneli = document.getElementById('kayitPaneli');
 const boyaForm = document.getElementById('boyaForm');
 const boyaAlanlari = document.getElementById('boyaAlanlari');
 const sonucAlani = document.getElementById('sonucAlani');
 
+// Panel Açma/Kapama
 ayarlarBtn.addEventListener('click', () => {
+    document.getElementById('duzenlenenId').value = ""; 
+    document.getElementById('panelBaslik').innerText = "Yeni Kayıt Ekle";
+    document.getElementById('kaydetBtn').innerText = "Buluta Kaydet";
+    boyaForm.reset();
+    boyaAlanlari.innerHTML = "";
     kayitPaneli.classList.toggle('hidden');
-    if(!kayitPaneli.classList.contains('hidden') && boyaAlanlari.children.length === 0) {
-        window.boyaAlaniEkle();
-    }
+    if(!kayitPaneli.classList.contains('hidden')) window.boyaAlaniEkle();
 });
 
 window.paneliKapat = () => kayitPaneli.classList.add('hidden');
 
-// Boya Satırı Ekleme
-window.boyaAlaniEkle = function() {
+// Boya Satırı Ekleme Fonksiyonu
+window.boyaAlaniEkle = function(no = '', gr = '') {
     const div = document.createElement('div');
     div.className = 'boya-satir';
     div.innerHTML = `
-        <input type="text" class="boyaNo" placeholder="No (Örn: 7.1)" style="flex:2">
-        <input type="number" class="boyaGram" placeholder="Gr" style="flex:1">
+        <input type="text" class="boyaNo" placeholder="No" value="${no}" style="flex:2">
+        <input type="number" class="boyaGram" placeholder="Gr" value="${gr}" style="flex:1">
     `;
     boyaAlanlari.appendChild(div);
 }
 
-// Firebase'e Kaydetme
+// Kaydetme ve Güncelleme İşlemi
 boyaForm.onsubmit = async (e) => {
     e.preventDefault();
+    const id = document.getElementById('duzenlenenId').value;
     
     const boyalar = [];
     document.querySelectorAll('.boya-satir').forEach(satir => {
@@ -51,50 +55,81 @@ boyaForm.onsubmit = async (e) => {
         if(no) boyalar.push({ no, gr });
     });
 
+    const veri = {
+        isim: document.getElementById('adSoyad').value.toLowerCase().trim(),
+        marka: document.getElementById('boyaMarka').value,
+        boyalar: boyalar,
+        oksidanGr: document.getElementById('oksidanGram').value,
+        oksidanVol: document.getElementById('oksidanVol').value,
+        not: document.getElementById('notlar').value,
+        tarih: new Date().toLocaleDateString('tr-TR'),
+        guncellemeZamani: new Date()
+    };
+
     try {
-        await addDoc(collection(db, "musteriler"), {
-            isim: document.getElementById('adSoyad').value.toLowerCase().trim(),
-            marka: document.getElementById('boyaMarka').value,
-            boyalar: boyalar,
-            oksidanGr: document.getElementById('oksidanGram').value,
-            oksidanVol: document.getElementById('oksidanVol').value,
-            not: document.getElementById('notlar').value,
-            tarih: new Date().toLocaleDateString('tr-TR'),
-            zaman: new Date()
-        });
-        alert("Buluta Kaydedildi!");
+        if (id) {
+            await updateDoc(doc(db, "musteriler", id), veri);
+            alert("Müşteri Başarıyla Güncellendi!");
+        } else {
+            await addDoc(collection(db, "musteriler"), veri);
+            alert("Müşteri Buluta Kaydedildi!");
+        }
         boyaForm.reset();
-        boyaAlanlari.innerHTML = '';
         paneliKapat();
+        sonucAlani.innerHTML = ""; // Ekranı temizle
     } catch (hata) {
-        console.error("Hata oluştu: ", hata);
-        alert("Kayıt yapılamadı! Firestore kurallarını kontrol edin.");
+        console.error(hata);
+        alert("Hata oluştu, tekrar deneyin.");
     }
 };
 
-// Arama Yapma
+// Düzenleme Modunu Başlatma
+window.duzenleDoldur = (id, isim, marka, oksGr, oksVol, not, boyalarJson) => {
+    const boyalar = JSON.parse(decodeURIComponent(boyalarJson));
+    
+    document.getElementById('duzenlenenId').value = id;
+    document.getElementById('adSoyad').value = isim;
+    document.getElementById('boyaMarka').value = marka;
+    document.getElementById('oksidanGram').value = oksGr;
+    document.getElementById('oksidanVol').value = oksVol;
+    document.getElementById('notlar').value = not;
+    
+    document.getElementById('panelBaslik').innerText = "Kaydı Düzenle";
+    document.getElementById('kaydetBtn').innerText = "Değişiklikleri Kaydet";
+    
+    boyaAlanlari.innerHTML = "";
+    boyalar.forEach(b => window.boyaAlaniEkle(b.no, b.gr));
+    
+    kayitPaneli.classList.remove('hidden');
+    window.scrollTo(0,0);
+};
+
+// Müşteri Arama Fonksiyonu
 window.musteriAra = async () => {
     const aranan = document.getElementById('aramaInput').value.toLowerCase().trim();
     if(aranan.length < 2) { sonucAlani.innerHTML = ''; return; }
 
     const q = query(collection(db, "musteriler"), where("isim", ">=", aranan), where("isim", "<=", aranan + "\uf8ff"));
-    const querySnapshot = await getDocs(q);
+    const snap = await getDocs(q);
     
     sonucAlani.innerHTML = '';
-    querySnapshot.forEach((doc) => {
+    snap.forEach((doc) => {
         const m = doc.data();
+        const id = doc.id;
+        const boyalarJson = encodeURIComponent(JSON.stringify(m.boyalar));
         let boyaHtml = m.boyalar.map(b => `<span class="boya-liste-item">${b.no} (${b.gr}gr)</span>`).join('');
         
         sonucAlani.innerHTML += `
             <div class="kayit-ozet">
-                <div style="display:flex; justify-content:space-between">
-                    <strong>${m.isim.toUpperCase()}</strong>
-                    <small>${m.tarih}</small>
-                </div>
-                <p><strong>Boya:</strong> ${m.marka}</p>
+                <button class="edit-btn" onclick="duzenleDoldur('${id}', '${m.isim}', '${m.marka}', '${m.oksidanGr}', '${m.oksidanVol}', '${m.not}', '${boyalarJson}')">
+                    <i class="fas fa-edit"></i> Düzenle
+                </button>
+                <strong>${m.isim.toUpperCase()}</strong>
+                <p style="font-size:12px; color:gray; margin-top:5px;">${m.tarih}</p>
+                <p><strong>Marka:</strong> ${m.marka}</p>
                 <div>${boyaHtml}</div>
                 <p><strong>Oksidan:</strong> ${m.oksidanGr}gr - ${m.oksidanVol} Vol</p>
-                ${m.not ? `<p style="font-size:12px; color:gray">Not: ${m.not}</p>` : ''}
+                ${m.not ? `<p style="font-size:13px; color:#555; background:#eee; padding:5px; border-radius:5px;">${m.not}</p>` : ''}
             </div>
         `;
     });
