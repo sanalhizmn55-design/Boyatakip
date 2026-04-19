@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salon Hidayet | Boya Takip Sistemi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Salon Hidayet - Boya Arşivi</h1>
+        
+        <section class="card">
+            <h2>Yeni Kayıt Ekle</h2>
+            <form id="boyaForm">
+                <input type="text" id="adSoyad" placeholder="Müşteri Ad Soyad" required>
+                <div class="row">
+                    <input type="text" id="boyaMarka" placeholder="Boya Markası" required>
+                    <input type="text" id="boyaNo" placeholder="Boya Numaraları (Örn: 7.1 + 8.0)" required>
+                </div>
+                <div class="row">
+                    <input type="number" id="oksidanGram" placeholder="Oksidan (Gram)" required>
+                    <select id="oksidanVol">
+                        <option value="10">10 Volüm (%3)</option>
+                        <option value="20" selected>20 Volüm (%6)</option>
+                        <option value="30">30 Volüm (%9)</option>
+                        <option value="40">40 Volüm (%12)</option>
+                    </select>
+                </div>
+                <textarea id="notlar" placeholder="Ekstra Notlar (Örn: Dipten uca uygulama yapıldı)"></textarea>
+                <button type="submit" class="btn-save">Kaydı Tamamla</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Müşteri Geçmişi Sorgula</h2>
+            <input type="text" id="aramaInput" placeholder="Müşteri adı yazın..." onkeyup="musteriAra()">
+            <div id="sonucAlani"></div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
