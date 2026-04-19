@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salon Hidayet | Boya Takip</title>
+    <title>Salon Hidayet | Dijital Boya Arşivi</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -11,19 +11,19 @@
     <div class="container">
         <header>
             <h1>Salon Hidayet</h1>
-            <button id="ayarlarBtn" class="settings-icon" title="Yeni Kayıt Paneli">
+            <button id="ayarlarBtn" class="settings-icon">
                 <i class="fas fa-cog"></i>
             </button>
         </header>
 
         <section id="kayitPaneli" class="card hidden">
             <div class="panel-header">
-                <h2>Yeni Müşteri Kaydı</h2>
-                <button onclick="paneliKapat()" class="close-btn">&times;</button>
+                <h2>Yeni Kayıt Ekle</h2>
+                <button type="button" onclick="paneliKapat()" class="close-btn">&times;</button>
             </div>
             <form id="boyaForm">
                 <input type="text" id="adSoyad" placeholder="Müşteri Ad Soyad" required>
-                <input type="text" id="boyaMarka" placeholder="Boya Markası (Örn: Igora, Koleston)" required>
+                <input type="text" id="boyaMarka" placeholder="Boya Markası" required>
                 
                 <div id="boyaAlanlari">
                     </div>
@@ -31,7 +31,7 @@
                 <button type="button" class="btn-secondary" onclick="boyaAlaniEkle()">+ Boya/Gram Ekle</button>
 
                 <div class="row">
-                    <input type="number" id="oksidanGram" placeholder="Oksidan Gram">
+                    <input type="number" id="oksidanGram" placeholder="Oksidan Gr">
                     <select id="oksidanVol">
                         <option value="10">10 Volüm</option>
                         <option value="20" selected>20 Volüm</option>
@@ -39,20 +39,20 @@
                         <option value="40">40 Volüm</option>
                     </select>
                 </div>
-                <textarea id="notlar" placeholder="Uygulama notları..."></textarea>
-                <button type="submit" class="btn-save">Müşteriyi Arşive Ekle</button>
+                <textarea id="notlar" placeholder="Uygulama notları veya özel formüller..."></textarea>
+                <button type="submit" class="btn-save">Buluta Kaydet</button>
             </form>
         </section>
 
         <section class="card">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="aramaInput" placeholder="Müşteri ismiyle geçmişi sorgula..." onkeyup="musteriAra()">
+                <input type="text" id="aramaInput" placeholder="Müşteri ismini yazın..." onkeyup="musteriAra()">
             </div>
             <div id="sonucAlani"></div>
         </section>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
