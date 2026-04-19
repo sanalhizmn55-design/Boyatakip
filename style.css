@@ -9,7 +9,7 @@ body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; pa
 .container { max-width: 450px; margin: auto; }
 
 header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-h1 { color: var(--primary); margin: 0; font-size: 22px; }
+h1 { color: var(--primary); margin: 0; font-size: 22px; border-left: 4px solid var(--accent); padding-left: 10px; }
 
 .settings-icon { background: none; border: none; font-size: 24px; color: var(--primary); cursor: pointer; transition: 0.3s; }
 .settings-icon:hover { transform: rotate(90deg); color: var(--accent); }
@@ -20,15 +20,17 @@ h1 { color: var(--primary); margin: 0; font-size: 22px; }
 .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
 .close-btn { background: none; border: none; font-size: 30px; color: #999; cursor: pointer; }
 
-input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
 .row { display: flex; gap: 10px; }
 
 .boya-satir { display: flex; gap: 5px; margin-bottom: 5px; }
-.btn-save { width: 100%; background: var(--success); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+.btn-save { width: 100%; background: var(--success); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
 .btn-secondary { width: 100%; background: #ebf2ff; color: #2980b9; border: 1px dashed #2980b9; padding: 10px; border-radius: 8px; cursor: pointer; }
 
-.search-box { display: flex; align-items: center; gap: 10px; background: #fff; padding: 5px 15px; border: 2px solid #ddd; border-radius: 10px; }
-.search-box input { border: none; margin: 0; outline: none; }
+.search-box { display: flex; align-items: center; gap: 10px; background: #fff; padding: 5px 15px; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 10px; }
+.search-box input { border: none; margin: 0; outline: none; flex: 1; }
 
-.kayit-ozet { border-left: 5px solid var(--accent); background: #fffaf5; padding: 15px; margin-top: 15px; border-radius: 10px; }
+.kayit-ozet { border-left: 5px solid var(--accent); background: #fffaf5; padding: 15px; margin-top: 15px; border-radius: 10px; position: relative; }
 .boya-liste-item { background: #eef2f3; padding: 4px 10px; border-radius: 20px; font-size: 13px; display: inline-block; margin: 2px; border: 1px solid #dcdde1; }
+
+.edit-btn { background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 12px; cursor: pointer; float: right; }
